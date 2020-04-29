@@ -1,61 +1,3 @@
-class Song:
-    """
-    class to represent a song
-    """
-
-    def __init__(self, name, artist, duration=0):
-        """
-        :param name: (str) Initialises the 'title' attribute
-        :param artist: (Artist) At  Artist object represeting the song's
-        creator.
-        :param duration:(Optional[int]) Initial value for the 'duration'
-                attribute. Will defualt to zero if not specified.
-        """
-        self.name = name
-        self.artist = artist
-        self.duration = duration
-
-
-class Album:
-    """
-    Class to represent an Album, using it's track list
-
-    Methods:
-        add_song: used to add a new song to the album's track list
-    """
-
-    def __init__(self, name, year, artist=None):
-        """
-        :param name:  the album name
-        :param year: the year album was created
-        :param artist: the artist reponsive foe the album.
-        :param tracks: List[Song]
-        """
-        self.name = name
-        self.year = year
-        if artist is None:
-            self.artist = Artist("Various artists")
-        else:
-            self.artist = artist
-        self.tracks = []
-
-    def add_song(self, song, position=None):
-        """
-        Adds a song to the track list
-        :param song:  a title of song to add
-        :param position: optional[int] if specified the song will be added
-        to that position, otherwise to the end of the list
-        :return: None
-        """
-        song_found = find_object(song, self.tracks)
-        if song_found is None:
-            song_found = Song(song, self.artist)
-            if position is None:
-                self.tracks.append(song_found)
-            else:
-                self.tracks.insert(position, song_found)
-
-
 class Artist:
     """
     Basic class to sto reartist details
@@ -89,11 +31,74 @@ class Artist:
         album_found = find_object(name, self.albums)
         if album_found is None:
             print("{} not found".format(name))
-            album_found = Album(name, year, self)
+            album_found = Album(name, year, self.name)
             self.add_album(album_found)
         else:
             print("Found album {}".format(name))
         album_found.add_song(title)
+
+
+class Album:
+    """
+        Class to represent an Album, using it's track list
+
+        Methods:
+        add_song: used to add a new song to the album's track list
+        """
+
+    def __init__(self, name, year, artist=None):
+        """
+        :param name:  the album name
+        :param year: the year album was created
+        :param artist: the artist reponsive foe the album.
+        :param tracks: List[Song]
+        """
+        self.name = name
+        self.year = year
+        if artist is None:
+            self.artist = "Various artists"
+        else:
+            self.artist = artist
+            self.tracks = []
+
+    def add_song(self, song, position=None):
+        """
+            Adds a song to the track list
+            :param song:  a title of song to add
+            :param position: optional[int] if specified the song will be added
+            to that position, otherwise to the end of the list
+            :return: None
+            """
+        song_found = find_object(song, self.tracks)
+        if song_found is None:
+            song_found = Song(song, self.artist)
+        if position is None:
+            self.tracks.append(song_found)
+        else:
+            self.tracks.insert(position, song_found)
+
+
+class Song:
+    """
+    class to represent a song
+    """
+
+    def __init__(self, title, artist, duration=0):
+        """
+        :param title: (str) Initialises the 'title' attribute
+        :param artist: (str) At  Artist name represeting the song's
+        creator.
+        :param duration:(Optional[int]) Initial value for the 'duration'
+                attribute. Will defualt to zero if not specified.
+        """
+        self.title = title
+        self.artist = artist
+        self.duration = duration
+
+    def get_title(self):
+        return self.title
+
+    name = property(get_title)
 
 
 def find_object(field, object_list):
@@ -132,7 +137,7 @@ def create_checkfile(artist_list):
         for new_artist in artist_list:
             for new_album in new_artist.albums:
                 for new_song in new_album.tracks:
-                    print("{0.name}\t{1.name}\t{1.year}\t{2.name}".format(
+                    print("{0.name}\t{1.name}\t{1.year}\t{2.title}".format(
                         new_artist, new_album, new_song), file=checkfile)
 
 
