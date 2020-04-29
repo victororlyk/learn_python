@@ -76,6 +76,18 @@ class Artist:
         self.albums.append(album)
 
 
+def find_object(field, object_list):
+    """
+    :param field: name
+    :param object_list:  check if it has field param in it
+    :return: field
+    """
+    for item in object_list:
+        if item.name == field:
+            return item
+    return None
+
+
 def load_data():
     new_artist = None
     new_album = None
@@ -88,34 +100,34 @@ def load_data():
             year_field = int(year_field)
             if new_artist is None:
                 new_artist = Artist(artist_field)
-            elif new_artist.name != artist_field:
-                # we'be just read details for a new artist
-                # store the current album in the current artist collection
-                # then
-                # create a new artist
-                new_artist.add_album(new_album)
                 artist_list.append(new_artist)
-                new_artist = Artist(artist_field)
+            elif new_artist.name != artist_field:
+                # we'be just read details for a new artist retireve artist
+                # object if there is one
+                # otherweise create a new artist object and add it to the
+                # artist line
+                new_artist = find_object(artist_field, artist_list)
+                if new_artist is None:
+                    new_artist = Artist(artist_field)
+                    artist_list.append(new_artist)
                 new_album = None
 
             if new_album is None:
                 new_album = Album(album_field, year_field, new_artist)
+                new_artist.add_album(new_album)
             elif new_album.name != album_field:
                 # we'be just read a new album for the current artist
-                # store the current album in the artists's collection
-                new_artist.add_album(new_album)
-                new_album = Album(album_field, year_field, new_artist)
+                # retrieve the album object if there is one
+                # otherwise create a new album object and o=sotre it in athe
+                # artists collection
+                new_album = find_object(album_field, new_artist.albums)
+                if new_album is None:
+                    new_album = Album(album_field, year_field, new_artist)
+                    new_artist.add_album(new_album)
             # create a new song object and add it to the current albums's
             # collections
             new_song = Song(song_field, new_artist)
             new_album.add_song(new_song)
-
-        # after reading last line of file we will have an artis and album
-        # that have't been stored
-        if new_artist is not None:
-            if new_album is not None:
-                new_artist.add_album(new_album)
-            artist_list.append(new_artist)
 
     return artist_list
 
