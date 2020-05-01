@@ -1,10 +1,32 @@
 from player import Player
-from enemy import Troll
+from enemy import Troll, Vampyre, VampyreKing
 
 tim = Player("Tim")
 
-another = Troll("Big troll", 18, 1)
-print("some troll {}".format(another))
+first_troll = Troll("Big troll")
+print("some troll {}".format(first_troll))
+first_troll.take_damage(18)
+print(first_troll)
+brother_troll = Troll("Urg")
+print(brother_troll)
+brother_troll.take_damage(4)
+brother_troll.grunt()
 
-brother = Troll("Urg", 23)
-print(brother)
+
+vamp = Vampyre("vlad")
+print(vamp)
+vamp.take_damage(3)
+print(vamp)
+
+print("*"*40)
+print(first_troll)
+
+while vamp.alive:
+        vamp.take_damage(1)
+        print(vamp)
+
+drakula = VampyreKing("vlad")
+print(drakula)
+
+drakula.take_damage(22)
+print(drakula)
