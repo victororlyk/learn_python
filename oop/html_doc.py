@@ -20,6 +20,16 @@ class DocType(Tag):
 class Head(Tag):
     def __init__(self):
         super().__init__("head", "")
+        self._head_contents = []
+
+    def add_tag(self, name, contents):
+        new_tag = Tag(name, contents)
+        self._head_contents.append(new_tag)
+
+    def display(self, file=None):
+        for tag in self._head_contents:
+            self.contents += str(tag)
+        super().display(file=file)
 
 
 class Body(Tag):
@@ -46,6 +56,9 @@ class HtmlDoc:  # composed of three other classes here we have polimorphism
     def add_tag(self, name, contents):
         self._body.add_tag(name, contents)
 
+    def add_metadata(self, name, contents):
+        self._head.add_tag(name, contents)
+
     def display(self, file=None):
         self._doc_type.display()
         print("<html>", file=file)
@@ -56,6 +69,7 @@ class HtmlDoc:  # composed of three other classes here we have polimorphism
 
 if __name__ == '__main__':
     my_page = HtmlDoc()
+    my_page.add_metadata('title', 'WooDoc')
     my_page.add_tag("h1", 'Main header')
     my_page.add_tag("h2", "sub header")
     my_page.add_tag("p", "some text in para")
