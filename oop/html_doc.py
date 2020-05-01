@@ -47,11 +47,11 @@ class Body(Tag):
         super().display(file=file)
 
 
-class HtmlDoc:  # composed of three other classes here we have polimorphism
-    def __init__(self):
-        self._doc_type = DocType()
-        self._head = Head()
-        self._body = Body()
+class HtmlDoc:  # rewritten with agregation
+    def __init__(self, doc_type, head, body):
+        self._doc_type = doc_type
+        self._head = head
+        self._body = body
 
     def add_tag(self, name, contents):
         self._body.add_tag(name, contents)
@@ -68,10 +68,21 @@ class HtmlDoc:  # composed of three other classes here we have polimorphism
 
 
 if __name__ == '__main__':
-    my_page = HtmlDoc()
-    my_page.add_metadata('title', 'WooDoc')
-    my_page.add_tag("h1", 'Main header')
-    my_page.add_tag("h2", "sub header")
-    my_page.add_tag("p", "some text in para")
-    with open('test.html', 'w') as test:
+
+    new_body = Body()
+    new_body.add_tag("h1", "Aggregasion")
+    new_body.add_tag('p', 'unlike <strong>composition</strong> agregation used '
+                          'exisiting instances of objects to build up another '
+                          'object')
+    new_body.add_tag('p', 'the composed object doesnt actually own the object '
+                          'that it i scomposed of if it is destroyed those '
+                          'obects continue to exist')
+    new_doctype = DocType()
+    new_header = Head()
+    my_page = HtmlDoc(new_doctype, new_header, new_body)
+
+    # give thw doucment enew coent by switching it's body
+
+    my_page._body = new_body
+    with open('test3.html', 'w') as test:
         my_page.display(file=test)
