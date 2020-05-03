@@ -31,6 +31,10 @@ class Duck:
 
 
 class Penguin:
+    def __init__(self):
+        # here we add a reference to aviate method so here we can really
+        # call this property like real method
+        self.fly = self.aviate
 
     def walk(self):
         print("Waddle, waddle, I waddle too")
@@ -40,6 +44,9 @@ class Penguin:
 
     def quack(self):
         print("Are you 'avin' a larf? I'm a penguin")
+
+    def aviate(self):
+        print("I won the lottery")
 
 
 class Mallard(Duck):
@@ -55,12 +62,18 @@ class Flock:
         fly_method = getattr(duck, "fly", None)
         if callable(fly_method):
             self.flock.append(duck)
+        else:
+            raise TypeError(
+                "Can add only flying animals, are you sure it is not {}".format(
+                    str(type(duck).__name__)))
 
     def migrate(self):
         problem = None
         for duck in self.flock:
             try:
                 duck.fly()
+                raise AttributeError("testing exception handle in migarate")
+                # TODO remove this before release
             except AttributeError as e:
                 print("one duck donw")
                 problem = e
