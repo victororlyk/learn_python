@@ -1,5 +1,8 @@
 import os
 import fnmatch
+import id3reader._p3 as id3reader
+
+
 
 
 def find_albums(root, artist_name):
@@ -21,5 +24,18 @@ def find_songs(albums):
 
 albums_list = find_albums("music", "Aerosmith")
 song_list = find_songs(albums_list)
-for a in song_list:
-    print(a)
+
+
+# for a in song_list:
+#     print(a)
+
+
+def get_all(path: str, extension: str):
+    for path, directories, files in os.walk(path):
+        for file in fnmatch.filter(files, '*.{}'.format(extension)):
+            absolute_path = os.path.abspath(path)
+            yield os.path.join(absolute_path, file)
+
+
+# for f in get_all('music', 'emp3'):
+#     print(f)
