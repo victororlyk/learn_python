@@ -1,7 +1,9 @@
 import pygame
 
 pygame.init()
-win = pygame.display.set_mode((500, 500))
+screen_width = 500
+
+win = pygame.display.set_mode((screen_width, screen_width))
 pygame.display.set_caption("First game")
 
 x = 50
@@ -12,6 +14,8 @@ height = 60
 
 vel = 5
 
+isJump = False
+jumpCount = 10
 run = True
 while run:
     pygame.time.delay(100)
@@ -20,14 +24,29 @@ while run:
             run = False
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:
+    if keys[pygame.K_LEFT] and x > vel:
         x -= vel
-    if keys[pygame.K_RIGHT]:
+    if keys[pygame.K_RIGHT] and x < screen_width - width:
         x += vel
-    if keys[pygame.K_UP]:
-        y -= vel
-    if keys[pygame.K_DOWN]:
-        y += vel
+    if not isJump:
+        if keys[pygame.K_UP] and y > vel:
+            y -= vel
+        if keys[pygame.K_DOWN] and y < screen_width - height - vel:
+            y += vel
+        if keys[pygame.K_SPACE]:
+            isJump = True
+    else:
+
+        if jumpCount >= -10:
+            print(jumpCount, 'here')
+            neg = 1
+            if jumpCount < 0:
+                neg = -1
+            y -= (jumpCount ** 2) * .5 * neg
+            jumpCount -= 1
+        else:
+            isJump = False
+            jumpCount = 10
 
     win.fill((0, 0, 0))
     pygame.draw.rect(win, (255, 0, 0), (x, y, width, height))
